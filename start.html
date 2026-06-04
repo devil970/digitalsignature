@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignCraft Studio — AI Signature Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Great+Vibes&family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&family=Allura&family=Sacramento&family=Courgette&family=Kaushan+Script&family=Marck+Script&family=Caveat:wght@400;700&family=Permanent+Marker&family=Indie+Flower&family=Shadows+Into+Light&family=Architects+Daughter&family=Rock+Salt&family=Reenie+Beanie&family=Herr+Von+Muellerhoff&family=Tangerine:wght@400;700&family=Alex+Brush&family=Parisienne&family=Italianno&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Ms+Madi&family=Imperial+Script&family=Euphoria+Script&family=Pinyon+Script&family=Corinthia:wght@400;700&family=WindSong&family=Yesteryear&family=Lovers+Quarrel&family=Bilbo+Swash+Caps&family=Bonheur+Royale&family=Berkshire+Swash&family=Norican&family=Aguafina+Script&family=Bad+Script&family=Calligraffitti&family=Cookie&family=Seaweed+Script&family=Mr+Dafoe&family=Rouge+Script&family=Petemoss&family=Birthstone&family=Ruthie&family=Allison&family=Yellowtail&family=Nothing+You+Could+Do&family=La+Belle+Aurore&family=Homemade+Apple&family=Lobster&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/studio.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="floaties" aria-hidden="true">
+    <div class="floaty"></div>
+    <div class="floaty"></div>
+    <div class="floaty"></div>
+    <div class="floaty"></div>
+  </div>
+  <div class="orb orb1" aria-hidden="true"></div>
+  <div class="orb orb2" aria-hidden="true"></div>
+
+  <header class="topnav">
+    <a class="brand" href="index.html">SignCraft</a>
+    <div class="topnav-actions">
+      <a class="link-ghost" href="index.html">← Home</a>
+      <button type="button" class="btn-icon" id="themeBtn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+    </div>
+  </header>
+
+  <main class="app">
+    <div class="ai-pill"><span></span> Live studio</div>
+    <h1 class="page-title">Digital Signature <em>Generator</em></h1>
+    <p class="page-sub">Type your name to preview <strong>50</strong> premium handwriting styles, draw with pen and eraser, then <strong>sign PDFs and images</strong> with drag-and-drop placement, zoom, and multi-page previews — all in your browser.</p>
+
+    <nav class="app-tabs" aria-label="Primary workspace">
+      <button type="button" class="app-tab active" data-workspace="create">Create signature</button>
+      <button type="button" class="app-tab" data-workspace="document">Sign documents</button>
+    </nav>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">50</div><div class="stat-label">Signature styles</div></div>
+      <div class="stat-card"><div class="stat-num">4+</div><div class="stat-label">Export formats</div></div>
+      <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Live previews</div></div>
+      <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Client-side privacy</div></div>
+    </div>
+
+    <div id="createWorkspace" class="create-workspace layout">
+      <section class="panel" aria-label="Controls">
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab active" data-mode="type" role="tab" aria-selected="true">Type</button>
+          <button type="button" class="tab" data-mode="draw" role="tab" aria-selected="false">Draw</button>
+        </div>
+
+        <div id="typeControls">
+          <div class="section-label">Full name</div>
+          <input type="text" class="input-text" id="nameInput" placeholder="e.g. Jordan Lee" maxlength="48" autocomplete="name" />
+
+          <div class="section-label" style="margin-top:18px">Style gallery</div>
+          <div class="filter-chips" id="filterChips"></div>
+          <div class="gallery-scroll"><div class="gallery-grid" id="gallery"></div></div>
+
+          <div class="row-2">
+            <div>
+              <div class="section-label">Ink</div>
+              <input type="color" id="inkColor" value="#141428" />
+            </div>
+            <div>
+              <div class="section-label">Canvas fill</div>
+              <input type="color" id="bgColor" value="#ffffff" />
+            </div>
+          </div>
+          <label style="display:flex;align-items:center;gap:10px;margin-top:12px">
+            <input type="checkbox" id="transparentBg" />
+            <span class="section-label" style="margin:0">Transparent preview background</span>
+          </label>
+
+          <div style="margin-top:14px">
+            <div class="section-label">Size <span id="sizeVal">44</span>px</div>
+            <input type="range" id="fontSize" min="22" max="110" value="44" />
+          </div>
+          <div style="margin-top:12px">
+            <div class="section-label">Letter spacing <span id="letterVal">0</span>px</div>
+            <input type="range" id="letterSpace" min="-2" max="16" value="0" step="0.5" />
+          </div>
+          <div style="margin-top:12px">
+            <div class="section-label">Rotation <span id="rotVal">0</span>°</div>
+            <input type="range" id="rotation" min="-18" max="18" value="0" step="0.5" />
+          </div>
+        </div>
+
+        <div id="drawControls" hidden>
+          <div class="tool-row">
+            <button type="button" class="tool-btn on" id="btnPen">Pen</button>
+            <button type="button" class="tool-btn" id="btnErase">Eraser</button>
+            <button type="button" class="tool-btn" id="undoBtn">Undo</button>
+            <button type="button" class="tool-btn" id="redoBtn">Redo</button>
+            <button type="button" class="tool-btn btn-danger" id="clearCanvas">Clear</button>
+          </div>
+          <div class="row-2" style="margin-top:12px">
+            <div>
+              <div class="section-label">Stroke</div>
+              <input type="color" id="strokeColor" value="#141428" />
+            </div>
+            <div>
+              <div class="section-label">Thickness <span id="strokeVal">3</span></div>
+              <input type="range" id="strokeWidth" min="1" max="18" value="3" />
+            </div>
+          </div>
+          <p class="hint">Supports mouse, pen, and touch. Eraser removes ink; SVG embeds a snapshot if eraser was used.</p>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="saveHistory">Save to history</button>
+        </div>
+
+        <div class="history">
+          <div class="history-head">
+            <span class="section-label" style="margin:0">Studio history</span>
+            <button type="button" class="btn btn-sm" id="clearHistory">Clear</button>
+          </div>
+          <div class="history-list" id="historyList"></div>
+          <p class="hint" id="historyEmpty">Nothing saved yet — create a signature and tap “Save to history”.</p>
+        </div>
+
+        <div class="dashboard-strip">
+          <span class="dash-pill">Glass UI</span>
+          <span class="dash-pill">High-DPI export</span>
+          <span class="dash-pill">Local storage</span>
+          <span class="dash-pill">Mobile ready</span>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Preview and export">
+        <div class="preview-wrap">
+          <div class="preview-toolbar">
+            <span class="section-label" style="margin:0">Export</span>
+            <button type="button" class="btn btn-primary" id="dlPng">PNG HD</button>
+            <button type="button" class="btn btn-primary" id="dlPngTrans">PNG α</button>
+            <button type="button" class="btn btn-primary" id="dlJpg">JPG</button>
+            <button type="button" class="btn btn-primary" id="dlSvg">SVG</button>
+            <button type="button" class="btn" id="copyBtn">Copy</button>
+          </div>
+          <div class="preview-body" id="previewBody">
+            <div id="typedWrap" style="width:100%;min-height:200px;display:flex;align-items:center;justify-content:center">
+              <div id="typedPreview" style="display:none"></div>
+              <span id="typedPlaceholder" style="color:var(--muted);font-size:0.95rem">Type your name to preview</span>
+            </div>
+            <canvas class="draw-canvas" id="drawCanvas" hidden></canvas>
+          </div>
+        </div>
+        <p class="hint"><strong>PNG HD</strong> uses 3× resolution. <strong>PNG α</strong> is transparent (typed ignores canvas fill). JPG is flattened on white. Draw SVG uses vectors unless eraser strokes exist (then a crisp snapshot is embedded).</p>
+      </section>
+    </div>
+
+    <section id="documentWorkspace" class="doc-workspace" aria-label="Sign PDFs and images" hidden>
+
+      <!-- ── Step bar ── -->
+      <div class="doc-stepbar">
+        <div class="doc-step" id="step1" data-active="true">
+          <div class="doc-step-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+          <div class="doc-step-text">
+            <span class="doc-step-num">Step 1</span>
+            <span class="doc-step-label">Upload document</span>
+          </div>
+        </div>
+        <div class="doc-step-connector"></div>
+        <div class="doc-step" id="step2">
+          <div class="doc-step-icon"><i class="fa-solid fa-signature"></i></div>
+          <div class="doc-step-text">
+            <span class="doc-step-num">Step 2</span>
+            <span class="doc-step-label">Place signature</span>
+          </div>
+        </div>
+        <div class="doc-step-connector"></div>
+        <div class="doc-step" id="step3">
+          <div class="doc-step-icon"><i class="fa-solid fa-file-export"></i></div>
+          <div class="doc-step-text">
+            <span class="doc-step-num">Step 3</span>
+            <span class="doc-step-label">Export signed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-layout">
+
+        <!-- ── LEFT: Upload + Pages ── -->
+        <aside class="doc-panel doc-left-panel" aria-label="Document upload and pages">
+
+          <!-- Upload zone -->
+          <div class="upload-zone-wrap">
+            <label class="upload-zone" id="uploadZone" for="docFileInput">
+              <input type="file" id="docFileInput" accept=".pdf,image/png,image/jpeg,image/webp,image/gif" />
+              <div class="upload-zone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="upload-zone-title">Drop your file here</div>
+              <div class="upload-zone-sub">PDF, PNG, JPG, WebP — up to any size</div>
+              <div class="upload-zone-btn">Browse files</div>
+            </label>
+          </div>
+
+          <!-- Loaded file info -->
+          <div class="doc-file-info" id="docFileInfo" hidden>
+            <div class="doc-file-icon" id="docFileIcon"><i class="fa-solid fa-file-pdf"></i></div>
+            <div class="doc-file-meta">
+              <div class="doc-file-name" id="docFileName">document.pdf</div>
+              <div class="doc-file-detail" id="docFileDetail">—</div>
+            </div>
+            <button type="button" class="doc-file-remove" id="docFileRemove" title="Remove document"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <!-- Page navigation -->
+          <div class="doc-pages-section" id="docPagesSection" hidden>
+            <div class="doc-pages-header">
+              <span class="section-label" style="margin:0">Pages</span>
+              <div class="doc-page-nav">
+                <button type="button" class="doc-nav-btn" id="docPagePrev" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                <span class="doc-page-counter" id="docPageLabel">—</span>
+                <button type="button" class="doc-nav-btn" id="docPageNext" disabled><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
+            <div class="thumbs-strip" id="pageThumbs"></div>
+          </div>
+
+          <!-- Recent files -->
+          <div class="doc-recent-section">
+            <div class="doc-recent-head">
+              <span class="section-label">Recent files</span>
+              <span class="doc-recent-hint">Names only · local</span>
+            </div>
+            <div class="doc-history-list" id="docHistoryList"></div>
+            <p class="hint" id="docHistoryEmpty" style="margin:4px 0 0">No recent files yet.</p>
+          </div>
+
+        </aside>
+
+        <!-- ── CENTER: Viewer ── -->
+        <div class="doc-panel doc-viewer-panel">
+
+          <!-- Viewer toolbar -->
+          <div class="doc-viewer-toolbar">
+            <div class="doc-viewer-toolbar-left">
+              <span class="doc-viewer-title" id="docViewerTitle">Document preview</span>
+            </div>
+            <div class="doc-viewer-toolbar-right">
+              <button type="button" class="doc-tool-btn" id="docZoomOut" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+              <span class="doc-zoom-badge" id="docZoomLabel">100%</span>
+              <button type="button" class="doc-tool-btn" id="docZoomIn" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button type="button" class="doc-tool-btn" id="docZoomFit" title="Fit to window"><i class="fa-solid fa-expand"></i></button>
+            </div>
+          </div>
+
+          <!-- Empty state -->
+          <div class="doc-empty-state" id="docEmptyState">
+            <div class="doc-empty-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="doc-empty-title">No document loaded</div>
+            <div class="doc-empty-sub">Upload a PDF or image to get started</div>
+          </div>
+
+          <!-- Canvas scroll area -->
+          <div class="doc-scroll" id="docScroll" hidden>
+            <div class="doc-page-host" id="docPageHost">
+              <canvas id="pdfCanvas"></canvas>
+              <div class="doc-overlay" id="docOverlay" aria-hidden="true"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── RIGHT: Signature controls ── -->
+        <aside class="doc-panel doc-right-panel" aria-label="Signature placement and export">
+
+          <!-- Signature preview chip -->
+          <div class="sig-preview-chip" id="sigPreviewChip">
+            <div class="sig-chip-label">Active signature</div>
+            <div class="sig-chip-preview" id="sigChipPreview">—</div>
+            <a href="#" class="sig-chip-edit" id="sigChipEdit">Edit in Create tab →</a>
+          </div>
+
+          <!-- Placement -->
+          <div class="doc-right-section">
+            <div class="section-label">Placement</div>
+            <div class="doc-place-btns">
+              <button type="button" class="btn btn-primary doc-place-main" id="btnPlaceSig">
+                <i class="fa-solid fa-signature"></i> Place signature
+              </button>
+              <button type="button" class="btn doc-apply-all" id="btnApplyAll" title="Stamp signature on every page">
+                <i class="fa-solid fa-layer-group"></i> All pages
+              </button>
+              <button type="button" class="btn btn-danger" id="btnRemoveSig">
+                <i class="fa-solid fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+
+          <!-- Opacity -->
+          <div class="doc-right-section">
+            <div class="section-label">Opacity <span class="doc-val-badge" id="docOpacityVal">100%</span></div>
+            <input type="range" id="docSigOpacity" min="0.2" max="1" value="1" step="0.05" />
+          </div>
+
+          <!-- Export -->
+          <div class="doc-right-section">
+            <div class="section-label">Export signed document</div>
+            <button type="button" class="btn btn-primary doc-export-btn" id="btnExportPdf">
+              <span class="doc-export-icon"><i class="fa-solid fa-file-pdf"></i></span>
+              <span class="doc-export-text">
+                <strong>Download PDF</strong>
+                <small>All pages · pixel-perfect</small>
+              </span>
+            </button>
+            <button type="button" class="btn doc-export-btn" id="btnExportPng">
+              <span class="doc-export-icon"><i class="fa-solid fa-image"></i></span>
+              <span class="doc-export-text">
+                <strong>Export page as PNG</strong>
+                <small>Current page only · high-res</small>
+              </span>
+            </button>
+          </div>
+
+          <!-- Trust badges -->
+          <div class="doc-trust-row">
+            <div class="doc-trust-badge"><i class="fa-solid fa-lock"></i> Client-side only</div>
+            <div class="doc-trust-badge"><i class="fa-solid fa-bolt"></i> Instant export</div>
+            <div class="doc-trust-badge"><i class="fa-solid fa-up-down-left-right"></i> Drag & resize</div>
+            <div class="doc-trust-badge"><i class="fa-solid fa-rotate"></i> Rotate handle</div>
+          </div>
+
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="globalLoading" class="loading-overlay" aria-hidden="true">
+    <div class="loading-card">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <div class="loading-title" id="loadingTitle">Working…</div>
+      <p class="loading-sub" id="loadingSub"></p>
+    </div>
+  </div>
+
+  <div id="toastHost" aria-live="polite"></div>
+  <canvas id="exportCanvas" hidden></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="assets/studio.js"></script>
+  <script src="assets/document-signer.js"></script>
+  <script>
+    // Theme icon swap
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const icon = document.getElementById('themeBtn').querySelector('i');
+      if (icon.classList.contains('fa-moon')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+      }
+    });
+  </script>
+</body>
+</html>

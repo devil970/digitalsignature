@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignCraft — Professional Digital Signature Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f5;
+      --muted: #8888aa;
+      --accent: #7c6ff7;
+      --accent2: #f093fb;
+      --card-bg: rgba(255,255,255,0.05);
+    }
+    [data-theme="light"] {
+      --bg: #f4f4fb;
+      --surface: rgba(255,255,255,0.8);
+      --border: rgba(0,0,0,0.08);
+      --text: #111122;
+      --muted: #666688;
+      --card-bg: rgba(255,255,255,0.9);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6%;
+      background: rgba(10,10,15,0.6);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+    [data-theme="light"] nav { background: rgba(244,244,251,0.7); }
+    .logo { font-family: 'Dancing Script', cursive; font-size: 1.7rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .9rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .theme-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); width: 38px; height: 38px; border-radius: 50%;
+      cursor: pointer; font-size: 1rem; display: grid; place-items: center;
+      transition: background .2s;
+    }
+    .theme-btn:hover { background: var(--border); }
+    .cta-nav {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; padding: 10px 22px; border-radius: 50px;
+      font-size: .9rem; font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .cta-nav:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 120px 6% 80px;
+      position: relative; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: .35; pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb1 { width: 500px; height: 500px; background: var(--accent); top: -100px; left: -150px; }
+    .orb2 { width: 400px; height: 400px; background: var(--accent2); bottom: -80px; right: -100px; animation-delay: -6s; }
+    .orb3 { width: 300px; height: 300px; background: #43e8d8; top: 40%; left: 50%; animation-delay: -3s; opacity: .18; }
+    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 6px 16px; border-radius: 50px; font-size: .8rem;
+      color: var(--muted); margin-bottom: 28px;
+    }
+    .badge span { width: 7px; height: 7px; background: #43e8d8; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 5rem); font-weight: 800; line-height: 1.1;
+      margin-bottom: 22px; letter-spacing: -1.5px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero p { font-size: 1.15rem; color: var(--muted); max-width: 560px; line-height: 1.7; margin-bottom: 40px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; padding: 15px 34px; border-radius: 50px;
+      font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 30px rgba(124,111,247,.4);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(124,111,247,.55); }
+    .btn-ghost {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 15px 34px; border-radius: 50px;
+      font-size: 1rem; font-weight: 500; cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .btn-ghost:hover { background: var(--border); transform: translateY(-2px); }
+
+    .hero-preview {
+      margin-top: 70px; position: relative; z-index: 1;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 20px; padding: 30px 40px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+      display: inline-block;
+    }
+    .preview-sig {
+      font-family: 'Dancing Script', cursive; font-size: 3.5rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: signFloat 4s ease-in-out infinite;
+    }
+    @keyframes signFloat { 0%,100%{transform:rotate(-2deg) translateY(0)} 50%{transform:rotate(1deg) translateY(-6px)} }
+    .preview-line { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent); margin-top: 8px; border-radius: 2px; }
+
+    /* ── STATS ── */
+    .stats { display: flex; justify-content: center; gap: 60px; padding: 50px 6%; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 90px 6%; }
+    .section-tag { font-size: .8rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px; }
+    .section-title { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; }
+    .section-sub { color: var(--muted); font-size: 1.05rem; line-height: 1.7; max-width: 540px; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px; margin-top: 50px;
+    }
+    .feature-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px;
+      backdrop-filter: blur(12px);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .feature-card:hover { transform: translateY(-6px); border-color: var(--accent); box-shadow: 0 20px 50px rgba(124,111,247,.15); }
+    .feature-icon { font-size: 2rem; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: flex; gap: 0; margin-top: 50px; flex-wrap: wrap; }
+    .step { flex: 1; min-width: 200px; text-align: center; padding: 20px; position: relative; }
+    .step:not(:last-child)::after {
+      content: '→'; position: absolute; right: -10px; top: 28px;
+      font-size: 1.4rem; color: var(--border);
+    }
+    .step-num {
+      width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid; place-items: center; font-weight: 800; font-size: 1.1rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      margin: 0 6% 90px; border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      padding: 60px 50px; text-align: center;
+      box-shadow: 0 30px 80px rgba(124,111,247,.35);
+    }
+    .cta-banner h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .cta-banner p { color: rgba(255,255,255,.8); font-size: 1.05rem; margin-bottom: 32px; }
+    .btn-white {
+      background: #fff; color: var(--accent); border: none;
+      padding: 15px 36px; border-radius: 50px; font-size: 1rem;
+      font-weight: 700; cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 25px rgba(0,0,0,.2);
+    }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 14px 35px rgba(0,0,0,.3); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 30px 6%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer p { font-size: .85rem; color: var(--muted); }
+    .footer-logo { font-family: 'Dancing Script', cursive; font-size: 1.3rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .stats { gap: 30px; }
+      .step:not(:last-child)::after { display: none; }
+      .cta-banner { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">SignCraft</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="start.html">Studio</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeToggle" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+    <a href="start.html" class="cta-nav">Open Studio <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="badge"><span></span> Professional Signature Studio</div>
+  <h1>Create Your Perfect<br /><em>Digital Signature</em></h1>
+  <p>Type or draw your signature, customize every detail, and export in PNG, JPG, or SVG — all in seconds.</p>
+  <div class="hero-btns">
+    <a href="start.html" class="btn-primary">Start Creating Free <i class="fa-solid fa-arrow-right"></i></a>
+    <a href="#features" class="btn-ghost">See Features</a>
+  </div>
+
+  <div class="hero-preview">
+    <div class="preview-sig" id="heroSig">Your Name</div>
+    <div class="preview-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">50</div><div class="stat-label">Signature Styles</div></div>
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Export Formats</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Customizations</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Free to Use</div></div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag">Features</div>
+  <h2 class="section-title">Everything you need</h2>
+  <p class="section-sub">A complete signature toolkit — no account, no watermarks, no limits.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-pen-nib"></i></div><h3>Type to Sign</h3><p>Enter your name and preview it across 50 curated handwriting fonts — cursive, luxury, brush, minimal, and more.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-pencil"></i></div><h3>Draw Mode</h3><p>Pen, eraser, undo/redo, and touch-friendly canvas for a natural signing flow.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-palette"></i></div><h3>Full Customization</h3><p>Pick any color, adjust font size, stroke width, and background to match your brand.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-file-arrow-down"></i></div><h3>Multi-Format Export</h3><p>PNG (HD + transparent), JPG, SVG, clipboard copy, and a <strong>Sign documents</strong> workspace for PDFs and images.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-clock-rotate-left"></i></div><h3>Signature History</h3><p>Your last 5 signatures are saved locally so you can revisit and re-download anytime.</p></div>
+    <div class="feature-card"><div class="feature-icon"><i class="fa-solid fa-circle-half-stroke"></i></div><h3>Dark & Light Mode</h3><p>Switch between dark and light themes for a comfortable experience any time of day.</p></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background: var(--surface); border-radius: 24px; margin: 0 0 0 0;">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title">Three simple steps</h2>
+  <p class="section-sub">From blank canvas to polished signature in under a minute.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>Type or Draw</h3><p>Enter your name or draw freehand on the canvas.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Customize</h3><p>Choose a style, color, and size that fits your personality.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Download</h3><p>Export as PNG, JPG, or SVG and use it anywhere.</p></div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner" style="margin-top: 90px;">
+  <h2>Ready to sign smarter?</h2>
+  <p>Join thousands who use SignCraft to create professional digital signatures.</p>
+  <a href="start.html" class="btn-white">Open the Studio <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+
+<footer>
+  <div class="footer-logo">SignCraft</div>
+  <p>© 2026 SignCraft. Built for professionals.</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  toggle.addEventListener('click', () => {
+    const isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    toggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+  });
+
+  // Animate hero signature with typing effect
+  const names = ['Alex Johnson', 'Sarah Williams', 'Your Name'];
+  let ni = 0;
+  const heroSig = document.getElementById('heroSig');
+  setInterval(() => {
+    ni = (ni + 1) % names.length;
+    heroSig.style.opacity = '0';
+    heroSig.style.transform = 'translateY(10px)';
+    heroSig.style.transition = 'opacity .4s, transform .4s';
+    setTimeout(() => {
+      heroSig.textContent = names[ni];
+      heroSig.style.opacity = '1';
+      heroSig.style.transform = '';
+    }, 400);
+  }, 3000);
+</script>
+</body>
+</html>
